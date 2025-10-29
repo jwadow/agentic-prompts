@@ -1,0 +1,135 @@
+### Core Principles for Test Development (@jwadow)
+
+#### 0. The Golden Rule: Do Not Modify Application Code for Tests
+- **Your primary goal is to write tests for the application *as it is*.** You must not modify the original application files to make them "more testable."
+- **Correct:** Use the testing framework's tools (fixtures, mocks, dependency injection, monkeypatching) to isolate and control the application's behavior from within the tests. This proves that even poorly designed or stateful code can be tested professionally without altering it.
+- **Incorrect (Unacceptable):** Adding `if is_testing:` blocks, changing function signatures, or altering the application's lifecycle logic in the production code. This is a critical failure and defeats the purpose of testing.
+
+#### 1. Context-First Approach
+- **The Goal:** Write tests that are consistent with the project's existing architecture and style.
+- **Action:** Before writing any code, you **must** study the following to build a complete mental model:
+  - Project documentation (e.g., `ARCHITECTURE.md`, `README.md`).
+  - The testing infrastructure (e.g., `tests/conftest.py` or equivalent).
+  - Existing unit and integration tests to understand patterns.
+  - The specific application code you are about to test.
+- **Incorrect:** Writing tests based only on the prompt or guesses, without exploring the codebase.
+
+#### 2. Professional Test Structure
+- **The Goal:** A clean, organized, and industry-standard architecturally sound test suite.
+- **Action:**
+  - Always create a root test directory (e.g., `tests/`, `spec/`).
+  - Inside it, separate tests by scope: `unit/` for isolated components and `integration/` for component interactions.
+  - Follow the framework's naming conventions (e.g., `test_*.py` or `*_spec.js`) so tests are auto-discovered.
+  - **Promote Reusability:** If you find the same setup code or helper functions in multiple tests, you **must** refactor this logic into a shared fixture in the appropriate (e.g., `tests/conftest.py`) or a utility module (e.g., `tests/utils.py`). Avoid code duplication at all costs.
+  - **Logical Grouping:** Before creating a new test file, always check if a logically appropriate file already exists. Add new tests for existing functionality to the corresponding test file. Create new files only for new, distinct modules or features.
+  - **Meaningful Naming:** Test filenames and test functions must reflect the *application module* they are testing (e.g., `test_state_manager.py`), not the development history. Names like `test_refactored.py` or `test_bug_fix.py` are strictly forbidden.
+- **Incorrect (The "Kludge" Way):** Dumping all test files into the root directory, creating unnecessary new files, or duplicating helper code. This is unprofessional and leads to chaos.
+
+#### 3. Environment and State Isolation
+To create fast and reliable tests, always isolate the code from external factors and other tests. Each test must run in a clean, predictable environment.
+
+- **Mandatory Rule: Self-Sufficiency.** Every test file, and every test within it, must be completely self-contained. A test suite where the full run passes, but running a single file fails (e.g., `pytest tests/test_some.py`), is considered broken and unacceptable. This indicates that tests are leaking state and are dependent on execution order, which must be fixed.
+- **Mock External I/O:** Mock all network I/O to remove dependencies on external services and ensure predictable responses.
+- **Mock Time:** Replace any time-based functions (like `sleep`) with instant stubs to eliminate real-world delays.
+- **Control App Lifecycle:** Bypass heavy application startup routines with lightweight test fixtures.
+- **Optimize Setup Speed:** Use "suite-level" hooks (e.g., `beforeAll`) for expensive, one-time setup, and "test-level" hooks (e.g., `beforeEach`) for lightweight, per-test cleanup.
+- **Use Factories for Configs:** Use **factory fixtures** to dynamically create configurations (e.g., JSON, YAML files) needed for a specific test.
+- **Use Temp Dirs for Files:** Use the testing framework's tools (e.g., `tmp_path` fixture) for any file I/O.
+- **Incorrect:** Relying on static config files from the project or writing tests that depend on the state left by previous tests.
+
+#### 4. Managing Application Lifecycle and Global State
+- **The Problem:** Global objects (like a database connection or HTTP client) created at the module level are a primary source of test failures. The first test to finish might close the connection, causing all subsequent tests to fail.
+- **Incorrect (The "Dirty" Way):** Modifying application code to behave differently during tests, for example by checking `if os.getenv("PYTEST_RUNNING"):`. This pollutes production code with test logic.
+- **Correct (The "Clean" Way):**
+  1.  **App Factory Pattern:** Structure the application so that the main app instance is created by a function (e.g., `create_app()`).
+  2.  **Context-Managed Dependencies:** Manage the lifecycle of shared resources (like clients or connections) within the application's own startup/shutdown events. Store the resource in the application's state/context.
+  3.  **Override from Tests:** In tests, use the framework's features (e.g., dependency overrides) to replace the real startup/shutdown logic with a no-op (empty) one. This gives the test full control over when and how the application is initialized.
+
+#### 5. Test Structure and Scope
+- **The Goal:** Write clear, focused, and readable tests.
+- **Action (Arrange-Act-Assert):** Structure every test in three distinct parts:
+  1.  **Arrange:** Set up all preconditions, data, and mocks.
+  2.  **Act:** Execute the single action being tested (e.g., call one function or one API endpoint).
+  3.  **Assert:** Check the outcome against expectations.
+- **Action (One Concept per Test):** Each test function should verify only one logical concept. This doesn't mean one `assert`, but it does mean not mixing unrelated checks (e.g., don't test user creation and deletion in the same test).
+- **Action (Test Both Happy and Unhappy Paths):** Always test for expected failures (e.g., invalid input, error responses) in addition to the successful "happy path".
+
+#### 6. Smart Coverage with Parametrization
+- **The Goal:** Test all logical branches without duplicating code.
+- **Action:** If a function or endpoint has different behaviors based on an input parameter (e.g., different processing modes), you **must** use a single, parametrized test function (e.g., `@pytest.mark.parametrize`) to test all behaviors.
+- **Incorrect (The "Brute-Force" Way):** Copy-pasting a test function and changing one value for each mode. This is inefficient, hard to maintain, and a sign of amateur work.
+
+#### 7. Iterative Development and Verification
+- **Correct:**
+  1.  Start by creating the basic test structure and a single "smoke test" that verifies the setup.
+  2.  **Ask the user to run the tests** to confirm the foundation is solid.
+  3.  Proceed with writing the full test suite only after getting confirmation.
+  4.  **Run tests frequently:** After creating or modifying a test file, run the tests for **just that file** to get fast feedback. Do not use verbose flags (like `-s`) for these intermediate checks to keep the context clean. At the end of the entire task, run the **full test suite** without verbose flags to ensure nothing was broken.
+  5.  **Atomic File Creation:** When creating a new test file, write the entire diff with all its tests in a single operation. Avoid creating a file and then incrementally adding one test function at a time through multiple edits.
+  6.  **Safe Deletion:** Before deleting files, especially after a refactoring (e.g., moving tests to a new file), you **must** first verify that the new implementation works correctly by running the relevant tests. Only after confirming success should you proceed with deleting the old files.
+- **Incorrect:** Writing all tests at once and then trying to debug everything simultaneously.
+
+#### 8. Maintain "Live" Test Documentation
+- **Action:** A `README.md` file must exist inside the root test directory (e.g., `tests/`, `spec/`).
+- **Mandatory Rule:** After a test function is successfully created, deleted or modified (i.e., it passes its verification run), the `README.md` must be updated to reflect the change before proceeding to the next step.
+- **Structure:**
+  - **`## Test Execution`**: Instructions on how to run the tests.
+  - **`## Test Coverage`**: A detailed, structured list describing the purpose of each test.
+- **Format for Test Coverage:**
+  - Use a clear, nested list format for each test file.
+  - For **every test function**, provide this for **every function**:
+    - **`test_function_name()`**:
+      - **`What it does:`**: A clear, concise description of the test's scenario.
+      - **`Purpose:`**: The specific business logic or system aspect this test validates.
+
+#### 9. Verbose and Debug-Friendly Tests
+- **Mandatory Rule:** Every test must be "verbose" and easy to debug.
+- **Action:**
+  - Use `print()` statements liberally to announce what the test is doing at each step (e.g., "Setting up mocks...", "Sending request to endpoint...", "Comparing results...").
+  - Before every `assert`, you **must** print a comparison, clearly showing the expected and actual values. Example: `print(f"Comparing status code: Expected {expected}, Got {actual}")`.
+- **Incorrect:** Writing "silent" tests. A failing test should provide enough context in its output to immediately understand the cause of the failure without needing a debugger.
+
+#### 10. Zero-Tolerance for Warnings
+- **Mandatory Rule:** The test suite must run completely clean, without any warnings (e.g., `DeprecationWarning`).
+- **Correct:** If a warning appears, treat it as a failure. Investigate the root cause and fix the underlying code or the test itself.
+- **Incorrect (The "Dirty" Way):** Suppressing warnings by using command-line flags or code-level ignores (e.g., `@pytest.mark.filterwarnings`). This is a kludge that hides technical debt and leads to future problems.
+
+#### 11. Agent Workflow and Tooling Strategy
+This section defines the mandatory operational workflow. Following these meta-rules is as important as following the testing principles themselves.
+
+- **Transparent and Detailed Planning:**
+  - Before taking any action, you **must** create a detailed, step-by-step plan using the `update_todo_list` tool. Each item must be a small, concrete action (e.g., "Write `unit/test_example.py` to understand some logic"), not a high-level goal (e.g., "Write unit tests").
+  - Before reading files with `read_file`, you **must** first state which files you intend to read and why, so the user understands your reasoning.
+
+- **Mandatory Dual-Search Exploration:**
+  To build a comprehensive understanding of the codebase, you **must** use a two-step search process for any new area of investigation:
+  1.  **Semantic Search First (`codebase_search`):** Always begin by using `codebase_search` with a natural language query describing the feature or concept. This identifies functionally relevant files and gives you a high-level overview.
+  2.  **Keyword Search Second (`search_files`):** Immediately follow up with `search_files` to find specific implementations, function calls, or variable names within the files identified in the first step.
+  - **Rationale:** This dual approach combines conceptual understanding with precise, pattern-based searching, which is critical for avoiding errors and understanding the code's architecture.
+
+- **Surgical Editing Principle:**
+  - Your primary tools for modifying code are `apply_diff` and `insert_content`. You **must** prefer these for all targeted changes. If diff fails, you must read the file from scratch.
+  - The `write_to_file` tool is a **last resort** and should only be used in two scenarios: 1) creating a completely new file, or 2) recovering a single file that has become so corrupted that `apply_diff` is no longer feasible. It must not be used for routine edits. Also `write_to_file` **should not be** simplified or generalized — this is literally a complete rewriting of the file, and it is easy to break or miss something.
+
+- **External Knowledge Protocol:**
+  - If a task requires knowledge of an external library or API for which an MCP tool is available, you **must** use that tool to retrieve documentation before attempting to write code. Do not rely on outdated internal knowledge.
+
+#### 12. Code Craftsmanship and Debugging Mindset
+- **Find the Root Cause:** When a test fails, your goal is not just to make it pass. You must investigate and understand the *root cause* of the failure. Do not patch the test to hide a real bug in the application; instead, identify the underlying issue.
+- **Code Commenting:**
+  - You **must** add descriptive comments (docstrings, block comments) for complex logic, non-obvious workarounds, or important setup steps in your tests.
+  - You **must not** delete existing comments in the code.
+  - You **must not** add useless, self-evident comments (e.g., `# Add import for time`).
+- **Import Hygiene:** Always add necessary imports and remove unused ones. Keep imports clean and organized according to project conventions.
+- **User Verification:** After completing a task that results in runnable code, you **must** ask the user to verify that everything works as expected. Do not assume your work is perfect.
+- **Fault-Tolerant Workflow:** If you discover a definitive bug in the application code while writing a test, you must not interrupt your workflow.
+  - **Correct Procedure:**
+    1.  Don't use `ask_followup_question` to notify user about bug at this moment.
+    2.  Skip the problematic test. You can comment it out and add a `## TODO: BUG DISCOVERED ##` comment explaining why it's disabled.
+    3.  Immediately add a new task to end of your `update_todo_list` to track the skipped test (e.g., "[ ] Address skipped test for `function_x` due to application bug").
+    4.  Continue with and complete all other planned tests and tasks.
+    5.  **Only after all other work is done**, report the situation to the user with `ask_followup_question`. The question must be: "I discovered a bug in the application code while writing test 'X' and had to skip it. What should we do?" and offer like these three suggestions:
+        - "Switch to Code mode to fix the application bug now"
+        - "Create a TODO file to fix the bug later."
+        - "Leave the skipped test as-is for now."
+  - **Incorrect:** Stopping all work to ask the user "The code is broken, what should I do?". This is an unacceptable interruption.
