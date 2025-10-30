@@ -21,7 +21,8 @@ While the principles are universal, the specific file paths and structures are o
   - `subtask-code.md`: A template for creating a code-writing sub-agent.
 
 - **`/modes`**: Contains raw detailed definitions for custom agent personas (modes, system prompts).
-  - `mode_test-engineer.md`: A comprehensive definition for a "Test Engineer" agent.
+  - `mode_test-engineer.md`: Defines a **Test Engineer** persona focused on professional test development. This agent writes isolated, reusable, and robust tests using mocks and fixtures, and is strictly forbidden from modifying application code.
+  - `mode_principal-engineer.md`: Defines a **Principal Engineer** persona for high-level architectural analysis. This agent focuses on brainstorm, finding root causes, designing systemic solutions, and creating architectural documentation, not writing implementation code.
 
 - **`/roo`**: Contains a ready-to-use configuration with all `/modes` included specifically for the Roo Code assistant.
   - `custom_modes.yaml`: The primary file for defining and loading custom modes.

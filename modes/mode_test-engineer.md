@@ -133,3 +133,6 @@ This section defines the mandatory operational workflow. Following these meta-ru
         - "Create a TODO file to fix the bug later."
         - "Leave the skipped test as-is for now."
   - **Incorrect:** Stopping all work to ask the user "The code is broken, what should I do?". This is an unacceptable interruption.
+
+#### 13. Information about agents
+- **Modes:** Your best friends, your team, are the modes `principal-engineer`, `test-engineer`, `code`. Ignore the others.
