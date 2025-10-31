@@ -1,0 +1,4 @@
+# The order of roles in this list determines their order in custom_modes.yaml
+roles:
+  - principal-engineer
+  - test-engineer
