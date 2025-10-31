@@ -14,33 +14,57 @@ The configurations in this repository are designed to be highly adaptable and ca
 
 While the principles are universal, the specific file paths and structures are optimized for **Roo Code**.
 
-## Repository Structure
+## Architecture: "Prompt-as-Code"
+
+This repository uses a **Prompt Builder** system to manage agent modes. This approach treats prompt engineering as a development process, where configurations are generated from source files.
+
+### Repository Structure
 
 - **`/commands`**: Contains markdown templates for slash-commands, it's like copypaste.
   - `subtask-analysis.md`: A template for creating a research-focused sub-agent.
   - `subtask-code.md`: A template for creating a code-writing sub-agent.
 
-- **`/modes`**: Contains raw detailed definitions for custom agent personas (modes, system prompts).
-  - `mode_test-engineer.md`: Defines a **Test Engineer** persona focused on professional test development. This agent writes isolated, reusable, and robust tests using mocks and fixtures, and is strictly forbidden from modifying application code.
-  - `mode_principal-engineer.md`: Defines a **Principal Engineer** persona for high-level architectural analysis. This agent focuses on brainstorm, finding root causes, designing systemic solutions, and creating architectural documentation, not writing implementation code.
+- **`/prompt_builder`**: The source directory for agent modes.
+  - `build.py`: A Python script that assembles all components into the final configuration file.
+  - `manifest.yaml`: Defines which agent modes to include in the build.
+  - `/sources`: Contains the raw materials (metadata and instructions) for each mode.
 
-- **`/roo`**: Contains a ready-to-use configuration with all `/modes` included specifically for the Roo Code assistant.
-  - `custom_modes.yaml`: The primary file for defining and loading custom modes.
+- **`custom_modes.yaml`**: The **generated output file** for agent modes. This file should not be edited manually, as it is overwritten by the build script.
 
-## Roo Code: Specific Configuration
+## Configuration for Roo Code
 
-These instructions are tailored for setting up with **Roo Code**.
+The setup process involves two distinct types of assets: **Custom Modes** and **Custom Commands**.
 
-### Custom Commands
+### 1. Custom Modes
 
-To use the custom command templates, place the files from the `/commands` directory into:
-`C:\Users\<USER>\.roo\commands\`
+Custom modes are managed via the Prompt Builder workflow.
 
-### Custom Modes (`custom_modes.yaml`)
+**Step 1: Edit the Sources**
+All modifications to modes are done in the `/prompt_builder/sources` directory.
+- To change a mode's instructions, edit its `prompt.md` file.
+- To change a mode's metadata (e.g., name, description), edit its `config.yaml` file.
+- To add a new mode, create a new sub-directory in `/sources` with the required files and add its name to `manifest.yaml`.
 
-To load the custom modes defined in this repository, your `custom_modes.yaml` file should be located at:
+**Step 2: Build the Configuration File**
+Run the build script from the repository's root directory to generate the final `custom_modes.yaml`:
+```bash
+python prompt_builder/build.py
+```
+
+**Step 3: Link the Output File**
+The generated `custom_modes.yaml` is the file to be used by the AI agent. For Roo Code, place it at:
 `C:\Users\<USER>\AppData\Roaming\Code\User\globalStorage\rooveterinaryinc.roo-cline\settings\custom_modes.yaml`
 
-*Note: The `rooveterinaryinc.roo-cline` part might vary based on your specific installation.*
+### 2. Custom Commands
 
-The raw markdown files in the `/modes` directory are referenced by `custom_modes.yaml` and do not need to be moved.
+Custom commands are managed by copying the templates directly.
+
+To use the command templates, place the files from the `/commands` directory into:
+`C:\Users\<USER>\.roo\commands\`
+
+## Available Modes
+
+This repository provides the following agent modes:
+
+- **🏛️ Principal Engineer**: A persona for high-level architectural analysis, root cause investigation, and strategic planning.
+- **🧪 Test Engineer**: A persona focused on professional test development, using mocks and fixtures without modifying application code.
