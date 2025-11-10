@@ -1,4 +1,11 @@
 # The order of roles in this list determines their order in custom_modes.yaml
 roles:
+  - maestro
   - principal-engineer
+  - lead-implementer
   - test-engineer
+  - advocate
+  - gardener
+  - mr-robot
+  - observer
+  - annihilator

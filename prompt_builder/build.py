@@ -23,24 +23,25 @@ def main():
     # Read the main manifest to get the correct order of roles.
     print("Reading manifest...")
     manifest = yaml.safe_load(MANIFEST_FILE.read_text(encoding='utf-8'))
-    ordered_roles_slugs = manifest['roles']
+    ordered_role_folders = manifest['roles']
 
     # First pass: collect all metadata for dynamic generation.
-    all_roles_configs = []
-    for role_slug in ordered_roles_slugs:
-        config_path = SOURCES_DIR / role_slug / 'config.yaml'
+    all_roles_data = []
+    for folder_name in ordered_role_folders:
+        config_path = SOURCES_DIR / folder_name / 'config.yaml'
         try:
             config_data = yaml.safe_load(config_path.read_text(encoding='utf-8'))
-            all_roles_configs.append(config_data)
+            all_roles_data.append({'folder': folder_name, 'config': config_data})
         except FileNotFoundError:
-            print(f"  FATAL: Config for '{role_slug}' not found at {config_path.resolve()}. Please check paths. Aborting.")
+            print(f"  FATAL: Config for '{folder_name}' not found at {config_path.resolve()}. Please check paths. Aborting.")
             return # Abort execution if the config is not found
 
     # --- 3. Dynamic Generation of Team Description ---
     print("Generating dynamic team description...")
     team_description_parts = ["### Our team of AI agents", "You must acknowledge the existence of only these AI agents developed by @jwadow. Our team consists of:"]
-    for config in all_roles_configs:
-        team_description_parts.append(f"- **{config['name']}**: {config['description']}")
+    for role_data in all_roles_data:
+        config = role_data['config']
+        team_description_parts.append(f"- **{config['name']}**: {config['description']}\n  - When to Use: {config['whenToUse']}")
     dynamic_team_description = "\n".join(team_description_parts)
 
     # --- 4. Read Common Instructions ---
@@ -49,12 +50,13 @@ def main():
 
     # --- 5. Main Build Loop ---
     final_modes_data = []
-    for config in all_roles_configs:
-        role_slug = config['slug']
-        print(f"Processing role: {role_slug}...")
+    for role_data in all_roles_data:
+        folder_name = role_data['folder']
+        config = role_data['config']
+        print(f"Processing role from folder: {folder_name}...")
 
         # Load role-specific instructions
-        prompt_path = SOURCES_DIR / role_slug / 'prompt.md'
+        prompt_path = SOURCES_DIR / folder_name / 'prompt.md'
         specific_instructions = prompt_path.read_text(encoding='utf-8')
 
         # Assemble `customInstructions`
@@ -106,8 +108,14 @@ def main():
                 output_lines.append(f"      - - {group_item[0]}")
                 # Handle dictionary inside the nested list
                 if len(group_item) > 1 and isinstance(group_item[1], dict):
-                    for key, value in group_item[1].items():
+                    dict_items = list(group_item[1].items())
+                    if dict_items:
+                        # The first key-value pair gets the list dash
+                        key, value = dict_items[0]
                         output_lines.append(f"        - {key}: {value}")
+                        # Subsequent key-value pairs are just indented
+                        for key, value in dict_items[1:]:
+                            output_lines.append(f"          {key}: {value}")
 
         output_lines.append("    customInstructions: |")
         output_lines.append(format_multiline_for_yaml(mode['customInstructions'], 3))
