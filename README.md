@@ -4,6 +4,20 @@ Welcome to my personal, curated collection of prompts, modes, and configurations
 
 This collection contains ready-to-use templates for defining agent personas, delegating tasks, and structuring interactions with various AI tools.
 
+## Available Modes
+
+This repository provides the following agent modes, forming the "Pantheon" team:
+
+- **🧠 Maestro**: An expert project orchestrator who decomposes complex tasks, delegates them to specialist agents, and manages the overall project plan.
+- **🏛️ Principal Engineer**: A top-tier technical leader for deep system analysis, architectural design, and long-term strategic planning.
+- **💻 Lead Implementer**: An expert developer who translates architectural plans into clean, efficient, and maintainable application code.
+- **🧪 Test Engineer**: A dedicated quality expert who writes clean, fast, and reliable unit and integration tests to ensure code correctness and robustness.
+- **🎭 Advocate**: A user experience specialist who designs intuitive, enjoyable, and habit-forming user flows by applying principles of usability and psychology.
+- **🌿 Gardener**: A meticulous engineer focused on code quality, fighting entropy by refactoring, updating dependencies, and eliminating technical debt.
+- **👾 Mr. Robot**: A cybersecurity expert who performs security audits and finds unconventional, low-cost solutions by reverse-engineering and exploiting external systems.
+- **👁️ Observer**: A performance and systems expert who makes applications transparent by instrumenting code with logs, metrics, and traces, and setting up deployment infrastructure.
+- **👺 Annihilator**: A cynical but logical agent whose sole purpose is to challenge complexity and ruthlessly identify features, code, or concepts that should be removed to regain focus.
+
 ## Applicable Tools & Platforms
 
 The configurations in this repository are designed to be highly adaptable and can be used with a wide range of AI agent tools and platforms, including:
@@ -61,17 +75,3 @@ Custom commands are managed by copying the templates directly.
 
 To use the command templates, place the files from the `/commands` directory into:
 `C:\Users\<USER>\.roo\commands\`
-
-## Available Modes
-
-This repository provides the following agent modes, forming the "Pantheon" team:
-
-- **🧠 Maestro**: An expert project orchestrator who decomposes complex tasks, delegates them to specialist agents, and manages the overall project plan.
-- **🏛️ Principal Engineer**: A top-tier technical leader for deep system analysis, architectural design, and long-term strategic planning.
-- **💻 Lead Implementer**: An expert developer who translates architectural plans into clean, efficient, and maintainable application code.
-- **🧪 Test Engineer**: A dedicated quality expert who writes clean, fast, and reliable unit and integration tests to ensure code correctness and robustness.
-- **🎭 Advocate**: A user experience specialist who designs intuitive, enjoyable, and habit-forming user flows by applying principles of usability and psychology.
-- **🌿 Gardener**: A meticulous engineer focused on code quality, fighting entropy by refactoring, updating dependencies, and eliminating technical debt.
-- **👾 Mr. Robot**: A cybersecurity expert who performs security audits and finds unconventional, low-cost solutions by reverse-engineering and exploiting external systems.
-- **👁️ Observer**: A performance and systems expert who makes applications transparent by instrumenting code with logs, metrics, and traces, and setting up deployment infrastructure.
-- **👺 Annihilator**: A cynical but logical agent whose sole purpose is to challenge complexity and ruthlessly identify features, code, or concepts that should be removed to regain focus.
