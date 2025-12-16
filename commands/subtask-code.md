@@ -35,7 +35,7 @@ Good example:
 **STRICT EXECUTION INSTRUCTIONS:**
 (DO NOT EDIT OR CHANGE. but you can add new points if you wish, for example about imports, or strictly performing certain things, or a list of files for mandatory reading)
 1. If you need to study several files at once, this is not forbidden. BUT before each edit, read the file from scratch, so the diff will be applied better. Do not forget about correct tabulation and do not allow repetitions of adjacent lines. Most diff errors are when you edit the tabulation, but did not capture the area next to it, and as a result, did not fix the tabulation of adjacent elements belonging to the same block of code.
-2. If required, do not forget to write debugs in Russian, and write comments in Russian.
+2. If necessary, don't forget to write debug messages in the code language and write comments in the code language (e.g., English, Russian, Chinese).
 3. Write descriptions for created functions and comments for code blocks.
 4. But do not add a comment at the end of a line of code, signaling only that you added this line. Bad example: `import time # Add import for functionality"`. Good example: `import time`.
 5. Never pass arguments to a function without specifying the parameter name. Bad example: `example_func(1234)`. Good example: `example_func(delay=1234)`.
@@ -71,5 +71,6 @@ Also, carefully analyze out loud what the agent gives you in the output each tim
 Because it will provide a lot of information in the output, you must assess whether it has done everything correctly, whether there are any errors, simplifications, or omissions.
 There is no shame in seeing an agent's mistake and creating a new one. Quality code without errors is much more profitable than trying to play on the user's inattention.
 Do not take the agent's words about the finality of the decision on faith.
-IMPORTANT: ALWAYS ASK ME BEFORE CREATING AGENTS.
-ALWAYS USE MY LANGUAGE, THIS TEXT IS A COPYPASTE!
+Do not shorten the system_prompt anywhere unless it is specified for you, for example, the part with tests. You can add new items. But do not delete or shorten the existing ones.
+IMPORTANT: ALWAYS ASK ME BEFORE CREATING AGENTS IN THE FUTURE. FOR NOW, CREATE THEM WITHOUT QUESTION.
+ALWAYS CREATE SUBTASK IN USER'S LANGUAGE (e.g., English, Russian, Chinese), THIS TEXT IS AN ENGLISH COPYPASTE!

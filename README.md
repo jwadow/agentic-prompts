@@ -35,6 +35,8 @@ This repository uses a **Prompt Builder** system to manage agent modes. This app
 ### Repository Structure
 
 - **`/commands`**: Contains markdown templates for slash-commands, it's like copypaste.
+  - `github-release.md`: A template for generating release notes from git commits.
+  - `question-chatgpt.md`: A template for asking ChatGPT questions with structured context.
   - `subtask-analysis.md`: A template for creating a research-focused sub-agent.
   - `subtask-code.md`: A template for creating a code-writing sub-agent.
 
