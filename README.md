@@ -140,6 +140,12 @@ This project is licensed under the **GNU Affero General Public License v3.0** �
 
 ---
 
+## 👤 Author
+
+**Jwadow** — [@Jwadow](https://github.com/jwadow)
+
+---
+
 <div align="center">
 
 **[⬆ Back to Top](#-ai-agent-prompts--configurations)**
