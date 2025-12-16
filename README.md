@@ -7,7 +7,7 @@
 
 **A personal, curated collection of prompts, modes, and configurations for AI coding assistants.**
 
-[Available Modes](#-available-modes) • [Available Commands](#-available-commands) • [Tools & Platforms](#-applicable-tools--platforms) • [Architecture](#-architecture-prompt-as-code) • [Getting Started](#-getting-started)
+[Available Modes](#-available-modes) • [Available Commands](#-available-commands) • [Tools & Platforms](#️-applicable-tools--platforms) • [Architecture](#️-architecture-prompt-as-code) • [Getting Started](#-getting-started)
 
 </div>
 
