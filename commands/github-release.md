@@ -4,21 +4,28 @@ description: "Create a new release (@jwadow)"
 
 Create release notes for a new version.
 
-## Step 1: Analyze commits (3 commands)
+## Step 1: Analyze commits (4 commands)
 
 **1.1. Get the latest tag (previous release):**
 ```bash
 git describe --tags --abbrev=0
 ```
 
-**1.2. Get ALL changes with a single command (full line-by-line diffs of all commits):**
+**1.2. Get commit titles (quick overview):**
+```bash
+git log [PREV_TAG]..HEAD --oneline
+```
+This shows a compact list of all commits with their short hashes and titles.
+Useful for quickly understanding what changed and extracting issue/PR numbers from commit messages.
+
+**1.3. Get ALL changes with full diffs:**
 ```bash
 git log [PREV_TAG]..HEAD -p --reverse
 ```
 This command will show for each commit: message + full line-by-line diff of all files.
 Flag `-p` = patch (full diff), `--reverse` = chronological order.
 
-**1.3. Read the affected files in full:**
+**1.4. Read the affected files in full:**
 Use `read_file` to read the current state of all modified files.
 This will provide full context for understanding the changes.
 
