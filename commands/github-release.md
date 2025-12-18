@@ -33,7 +33,7 @@ This will provide full context for understanding the changes.
 Create a file `_notes/RELEASE_NOTES_v[VERSION].md` with the following structure:
 
 ```markdown
-# v[VERSION] - [Catchy Name] Release
+v[VERSION] - [Catchy Name] Release
 
 ---
 
