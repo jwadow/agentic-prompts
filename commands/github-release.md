@@ -71,6 +71,10 @@ After downloading and extracting the new release, install dependencies from the 
 pip install -r requirements.txt
 ```
 
+## 🙏 Contributors
+[List contributors who submitted PRs for this release]
+- @username - contributed #pr_number
+
 ---
 
 **Full Changelog**: https://github.com/[OWNER]/[REPO]/compare/[PREV_VERSION]...[VERSION]
@@ -96,7 +100,7 @@ Verify that the version is updated in all project files:
 2. Ensure `APP_VERSION` in `config.py` matches the release, if present
 3. Check `__version__` in `__init__.py`, if present
 4. Check other places in case of other programming languages
-5. Notify the user if the version is not updated somewhere
+5. **If version is NOT updated**: Use ask tool to explicitly ask the user (on its language): "I found that version is not updated in [list files]. Have you updated the version? Please confirm when done." Wait for user confirmation before proceeding.
 
 ## Step 4: Release name
 Come up with a name in the format: `v[VERSION] - [Catchy Name] Release`
@@ -115,3 +119,5 @@ Examples:
 8. If there are new pip dependencies, be sure to mention `pip install -r requirements.txt`
 9. Create the file in English, but communicate with the user in their language.
 10. Ask the user for REQUIRED data if not provided, such as the new version number or repository link
+11. Contributors section: If you cannot determine GitHub usernames and PR numbers from git log (e.g., PR number missing in commit message or author name differs from GitHub username), ASK the user to provide the list of contributors with their GitHub usernames and PR numbers. Do not guess or leave placeholders.
+12. Issue/PR references: If commit messages contain issue/PR numbers in format `(#123)` or `#123`, extract them and append to the end of each corresponding item in ALL sections. Format: `- Description of some change (#123)`. This links changes to their original issues/PRs.
