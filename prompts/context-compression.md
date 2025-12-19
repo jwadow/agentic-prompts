@@ -39,7 +39,7 @@ Outline all pending tasks that you have explicitly been asked to work on, as wel
 
 ## Critical Rules
 
-**BE DETAILED BUT CONCISE.** You must fit everything important within the 10,000 character limit.
+**BE DETAILED BUT CONCISE.** You must fit everything important within the 10,000 character limit (500 lines).
 
 - Prioritize: Current Work > Pending Tasks > Recent Problems > Earlier Context
 - Include ALL file paths, function names, and specific references mentioned recently.
