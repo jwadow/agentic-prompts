@@ -52,6 +52,16 @@ This repository also provides slash-commands — reusable prompt templates that 
 
 ---
 
+## 📝 Available Prompts
+
+This repository also provides standalone prompts — reusable prompt templates for specific tasks:
+
+| Prompt | Description |
+|--------|-------------|
+| **🗜️ Context Compression** | Compresses long conversation history into a detailed summary that preserves all important context. Used when conversation exceeds token limits. |
+
+---
+
 ## 🛠️ Applicable Tools & Platforms
 
 The configurations in this repository are designed to be highly adaptable and can be used with a wide range of AI agent tools and platforms:
@@ -75,6 +85,7 @@ This repository uses a **Roles Builder** system to manage agent modes. This appr
 | Path | Description |
 |------|-------------|
 | **`/commands`** | Contains markdown templates for slash-commands (see [Available Commands](#-available-commands) above). |
+| **`/prompts`** | Contains standalone prompt templates (see [Available Prompts](#-available-prompts) above). |
 | **`/roles_builder`** | The source directory for agent modes. |
 | ↳ `build.py` | A Python script that assembles all components into the final configuration file. |
 | ↳ `manifest.yaml` | Defines which agent modes to include in the build. |
