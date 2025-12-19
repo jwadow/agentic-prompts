@@ -18,7 +18,7 @@ The system automatically generates the main `custom_modes.yaml` configuration fi
 
 ```
 .
-├── prompt_builder/
+├── roles_builder/
 │   ├── manifest.yaml              # Manages the order of roles
 │   ├── sources/
 │   │   ├── _shared/
@@ -37,7 +37,7 @@ The system automatically generates the main `custom_modes.yaml` configuration fi
 
 ### 3.2. Key Components
 
-#### `prompt_builder/manifest.yaml`
+#### `roles_builder/manifest.yaml`
 - **Purpose:** Defines which roles are included in the build and in what order. This is the only file that needs to be edited to manage the order.
 - **Example:**
   ```yaml
@@ -89,10 +89,10 @@ The system automatically generates the main `custom_modes.yaml` configuration fi
 ## 4. Workflow
 
 ### Adding a New Role
-1.  Create a folder for the role in `prompt_builder/sources/`.
+1.  Create a folder for the role in `roles_builder/sources/`.
 2.  Inside, create `config.yaml` (with metadata) and `prompt.md` (with instructions).
-3.  Add the role's `slug` to `prompt_builder/manifest.yaml`.
-4.  Run `python prompt_builder/build.py`.
+3.  Add the role's `slug` to `roles_builder/manifest.yaml`.
+4.  Run `python roles_builder/build.py`.
 
 ### Modifying a Role
 -   To change instructions, edit `sources/{role_name}/prompt.md`.

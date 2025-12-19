@@ -68,14 +68,14 @@ The configurations in this repository are designed to be highly adaptable and ca
 
 ## 🏗️ Architecture: "Prompt-as-Code"
 
-This repository uses a **Prompt Builder** system to manage agent modes. This approach treats prompt engineering as a development process, where configurations are generated from source files.
+This repository uses a **Roles Builder** system to manage agent modes. This approach treats prompt engineering as a development process, where configurations are generated from source files.
 
 ### Repository Structure
 
 | Path | Description |
 |------|-------------|
 | **`/commands`** | Contains markdown templates for slash-commands (see [Available Commands](#-available-commands) above). |
-| **`/prompt_builder`** | The source directory for agent modes. |
+| **`/roles_builder`** | The source directory for agent modes. |
 | ↳ `build.py` | A Python script that assembles all components into the final configuration file. |
 | ↳ `manifest.yaml` | Defines which agent modes to include in the build. |
 | ↳ `/sources` | Contains the raw materials (metadata and instructions) for each mode. |
@@ -89,12 +89,12 @@ The setup process involves two distinct types of assets: **Custom Modes** and **
 
 ### 1. Custom Modes
 
-Custom modes are managed via the Prompt Builder workflow.
+Custom modes are managed via the Roles Builder workflow.
 
 <details>
 <summary><b>Step 1: Edit the Sources</b></summary>
 
-All modifications to modes are done in the `/prompt_builder/sources` directory.
+All modifications to modes are done in the `/roles_builder/sources` directory.
 - To change a mode's instructions, edit its `prompt.md` file.
 - To change a mode's metadata (e.g., name, description), edit its `config.yaml` file.
 - To add a new mode, create a new sub-directory in `/sources` with the required files and add its name to `manifest.yaml`.
@@ -106,7 +106,7 @@ All modifications to modes are done in the `/prompt_builder/sources` directory.
 
 Run the build script from the repository's root directory to generate the final `custom_modes.yaml`:
 ```bash
-python prompt_builder/build.py
+python roles_builder/build.py
 ```
 
 </details>
