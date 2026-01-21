@@ -6,6 +6,16 @@ Create release notes for a new version.
 
 ## Step 1: Analyze commits (4 commands)
 
+**⚠️ CRITICAL WARNING: Terminal output truncation**
+Terminal output has limits. ANY command output can be truncated.
+**YOU MUST verify that EVERY command output is complete:**
+- Check if output ends abruptly or mid-sentence
+- Look for truncation indicators like "..." or sudden cutoffs
+- Compare expected vs actual data (e.g., commit count from step 1.2 vs commits in step 1.3)
+
+**If ANY command is truncated, you MUST use alternative approaches to get complete data.**
+**NEVER proceed with incomplete data. Incomplete data = incorrect release notes.**
+
 **1.1. Get the latest tag (previous release):**
 ```bash
 git describe --tags --abbrev=0
@@ -18,12 +28,29 @@ git log [PREV_TAG]..HEAD --oneline
 This shows a compact list of all commits with their short hashes and titles.
 Useful for quickly understanding what changed and extracting issue/PR numbers from commit messages.
 
-**1.3. Get ALL changes with full diffs:**
+**1.3. Get ALL changes with FULL line-by-line diffs:**
+
+**⚠️ CRITICAL: You need COMPLETE DIFFS, not statistics. ZERO GUESSES allowed.**
+
+Build a chained command using ALL commit hashes from step 1.2:
 ```bash
-git log [PREV_TAG]..HEAD -p --reverse
+git show [HASH1] && echo "========== NEXT ==========" && git show [HASH2] && echo "========== NEXT ==========" && git show [HASH3]
 ```
-This command will show for each commit: message + full line-by-line diff of all files.
-Flag `-p` = patch (full diff), `--reverse` = chronological order.
+
+**Why this approach:**
+- Each `git show` gives FULL line-by-line diff for ONE commit (not statistics, actual changed lines)
+- Separators `========== NEXT ==========` clearly mark boundaries between commits
+- Chaining with `&&` runs all commands in one execution, avoiding multiple terminal calls
+- No truncation risk because you control the number of commits per command
+- **MAXIMUM 3 commits per command.** If you have more commits, run multiple commands with 3 commits each
+
+**DO NOT use `git log -p` - it produces huge output that gets truncated and you won't notice.**
+
+**NEVER create release notes from:**
+- Incomplete data
+- Statistics (files changed, lines added/removed counts)
+- Your guesses or assumptions
+You MUST have actual changed lines for every commit.
 
 **1.4. Read the affected files in full:**
 Use `read_file` to read the current state of all modified files.
@@ -126,5 +153,5 @@ Examples:
 8. If there are new pip dependencies, be sure to mention `pip install -r requirements.txt`
 9. Create the file in English, but communicate with the user in their language.
 10. Ask the user for REQUIRED data if not provided, such as the new version number or repository link
-11. Contributors section: If you cannot determine GitHub usernames and PR numbers from git log (e.g., PR number missing in commit message or author name differs from GitHub username), ASK the user to provide the list of contributors with their GitHub usernames and PR numbers. Do not guess or leave placeholders.
+11. Contributors section: If you cannot determine GitHub usernames and PR numbers from git log (e.g., PR number missing in commit message or author name differs from GitHub username), ASK the user to provide the list of contributors with their GitHub usernames and PR numbers. Do not guess or leave placeholders. **IMPORTANT: Contributors must be actual code contributors from git commits or CONTRIBUTING file. Updating CLA list or other administrative lists does NOT mean new contributors.**
 12. Issue/PR references: If commit messages contain issue/PR numbers in format `(#123)` or `#123`, extract them and append to the end of each corresponding item in ALL sections. Format: `- Description of some change (#123)`. This links changes to their original issues/PRs.
